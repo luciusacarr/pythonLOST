@@ -73,17 +73,21 @@ class StarfieldSimulator:
 
             cam_coords = camera.spatial_to_camera(rotated)
 
-            if camera.in_sensor(cam_coords):
+            peak_brightness_per_time = zero_mag_peak_photon_density * mag_to_brightness(catalog_star.magnitude)
+            interesting_threshold = 0.05 
+                
+            val = -math.log(interesting_threshold / peak_brightness_per_time / exposure_time) * 2 * math.pi * star_spread_std_dev**2
+            radius = math.ceil(math.sqrt(max(0, val))) 
+
+            star_in_sensor = (cam_coords.x + radius >= 0 and cam_coords.x - radius < camera.XResolution()) and (cam_coords.y + radius >= 0 and cam_coords.y - radius < camera.YResolution())
+
+            if (star_in_sensor):
                 future_spatial = future_attitude.rotate(catalog_star.spatial)
                 delta = camera.spatial_to_camera(future_spatial) - cam_coords
                 if not motion_blur_enabled:
                     delta = Vec2(0, 0)
 
-                peak_brightness_per_time = zero_mag_peak_photon_density * mag_to_brightness(catalog_star.magnitude)
-                interesting_threshold = 0.05 
-                
-                val = -math.log(interesting_threshold / peak_brightness_per_time / exposure_time) * 2 * math.pi * star_spread_std_dev**2
-                radius = math.ceil(math.sqrt(max(0, val))) 
+
                 
                 
                 star = Star(cam_coords.x, cam_coords.y, radius, radius, -catalog_star.magnitude)
