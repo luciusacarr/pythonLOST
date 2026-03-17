@@ -2,7 +2,6 @@
 import math
 from dataclasses import dataclass
 
-# --- Basic Math & Vectors ---
 @dataclass
 class Vec2:
     x: float

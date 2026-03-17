@@ -79,7 +79,7 @@ class StarfieldSimulator:
             val = -math.log(interesting_threshold / peak_brightness_per_time / exposure_time) * 2 * math.pi * star_spread_std_dev**2
             radius = math.ceil(math.sqrt(max(0, val))) 
 
-            star_in_sensor = (cam_coords.x + radius >= 0 and cam_coords.x - radius < camera.XResolution()) and (cam_coords.y + radius >= 0 and cam_coords.y - radius < camera.YResolution())
+            star_in_sensor = (cam_coords.x + radius >= 0 and cam_coords.x - radius < camera.res_x) and (cam_coords.y + radius >= 0 and cam_coords.y - radius < camera.res_y)
 
             if (star_in_sensor):
                 future_spatial = future_attitude.rotate(catalog_star.spatial)
